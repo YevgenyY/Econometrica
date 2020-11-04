@@ -40,3 +40,45 @@ qnorm(0.7, mean=5, sd=3)
 # p - вероятность
 # q - квантиль
 
+# множественная регрессия, проверка гипотез
+h <- swiss
+glimpse(h)
+help(swiss)
+
+model <- lm(data=h, Fertility~Catholic+Agriculture+Examination)
+coeftest(model) # выводим коэффициенты
+confint(model) # выводим доверительный интрервал
+sjp.lm(model)
+
+# проверка линейных гипотез b_Cath = b_Agri
+# способ с построением вспомогательной регрессии
+model_aux <- lm(data=h, 
+                Fertility~Catholic + I(Catholic+Agriculture) + Examination)
+summary(model_aux)
+linearHypothesis(model, "Catholic-Agriculture=0")
+
+# стандартизированные коэффициенты
+h_st <- mutate_each(h, "scale")
+glimpse(h_st)
+
+model_st <- lm(data=h_st, Fertility~Catholic+Agriculture+Examination)
+summary(model_st)
+sjp.lm(model_st)
+
+# искусственный эксперимент
+D <- matrix(nrow=100, rnorm(100*41,mean=0,sd=1))
+df <- data.frame(D)
+
+model_pusto <- lm(data=df, X1~.) #  X1 объясяется всеми остальными переменными
+summary(model_pusto)
+
+# сравним несколько моделей
+model2 <- lm(data=h, Fertility~Catholic+Agriculture)
+summary(model2)
+compar_12 <- mtable(model, model2)
+compar_12
+
+# сохраним результаты работы
+stuff <- list(data=h, model=model2)
+saveRDS(file="mydata.RDS", stuff)
+# mylist <- readRDS("mydata.RDS")
