@@ -1,0 +1,117 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+  russian,
+]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={Нано исследование},
+  pdflang={ru-RU},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifxetex
+  % Load polyglossia as late as possible: uses bidi with RTL langages (e.g. Hebrew, Arabic)
+  \usepackage{polyglossia}
+  \setmainlanguage[]{russian}
+\else
+  \usepackage[shorthands=off,main=russian]{babel}
+\fi
+
+\title{Нано исследование}
+\author{}
+\date{\vspace{-2.5em}}
+
+\begin{document}
+\maketitle
+
+Исследуем цены на квартиры в москве
+
+В нашем наборе данных 2040 наблюдение. Средняя цена квартиры равна 127.5
+тысяч у.е.
+
+Красивый график
+\includegraphics{nano_research_files/figure-latex/unnamed-chunk-1-1.pdf}
+
+Оценим три модели
+
+\begin{verbatim}
+## 
+## Calls:
+## model_0: lm(formula = log(price) ~ log(totsp), data = f)
+## model_1: lm(formula = log(price) ~ log(totsp) + brick, data = f)
+## model_2: lm(formula = log(price) ~ log(totsp) + brick + brick:log(totsp), 
+##     data = f)
+## 
+## ================================================================
+##                          model_0      model_1       model_2     
+## ----------------------------------------------------------------
+##   (Intercept)            -0.766***     -0.650***     -0.459***  
+##                          (0.098)       (0.094)       (0.121)    
+##   log(totsp)              1.301***      1.264***      1.219***  
+##                          (0.023)       (0.022)       (0.028)    
+##   brick: 1/0                            0.129***     -0.350     
+##                                        (0.009)       (0.193)    
+##   log(totsp) x brick1                                 0.112*    
+##                                                      (0.045)    
+## ----------------------------------------------------------------
+##   Deviance               78.922        71.569        71.352     
+##   AIC                  -839.319     -1036.829     -1041.014     
+##   N                    2040          2040          2040         
+## ================================================================
+##   Significance: *** = p < 0.001; ** = p < 0.01; * = p < 0.05
+\end{verbatim}
+
+У нас лучше оказалась модель \#2.
+
+\end{document}

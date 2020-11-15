@@ -1,0 +1,50 @@
+---
+title: "Нано исследование"
+output:
+  pdf_document: default
+  word_document: default
+lang: ru-RU
+---
+Исследуем цены на квартиры в москве
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+library("psych")
+library("dplyr")
+library("memisc")
+library("ggplot2")
+library("lmtest")
+library("foreign")
+library("vcd") # визуализация множества переменных на одном графике
+library("devtools")
+library("hexbin")
+library("pander")
+library("sjPlot")
+library("knitr")
+
+h <- diamonds
+glimpse(h)
+
+f <- read.csv("../data/flats_moscow.txt", sep="\t", header=TRUE, dec=".")
+```
+
+В нашем наборе данных `r nrow(f)` наблюдение. Средняя цена квартиры равна `r round(mean(f$price), 2)` тысяч у.е.
+
+Красивый график
+```{r}
+f <- mutate_each(f, "factor", walk, brick, floor, code)
+qplot(data=f, log(price), fill=brick, geom="density", alpha=0.5)
+```
+
+
+Оценим три модели
+```{r, results='markup'}
+model_0 <- lm(data=f, log(price)~log(totsp))
+model_1 <- lm(data=f, log(price)~log(totsp)+brick)
+model_2 <- lm(data=f, log(price)~log(totsp)+brick+brick:log(totsp))
+
+mtable(model_0, model_1, model_2, summary.stats=c("Deviance","AIC","N"))
+```
+
+У нас лучше оказалась модель #2.
