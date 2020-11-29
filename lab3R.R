@@ -64,9 +64,9 @@ exp(predict(model_2, newdata=nw, interval="prediction"))
 # проверка гипотезы о линейных ограничениях, представление результатов
 # waldtest, F-stat
 # show p-value
-waldtest(model_0, model_1) # H_0: true model_0 is rejected
-waldtest(model_1, model_2) # H_0: true model_1 is rejected
-waldtest(model_0, model_2) # H_0: true model_0 is rejected
+waldtest(model_0, model_1) # H_0 (model_0 == true) is rejected, new coefs are significant
+waldtest(model_1, model_2) # H_0 (model_1 == true) is rejected, ... 
+waldtest(model_0, model_2) # H_0 (model_0 == true) is rejected, ...
 
 # Draw a base graph
 gg0 <- qplot(data=f, log(totsp), log(price))
