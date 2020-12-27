@@ -57,6 +57,7 @@ df <- diamonds
 model <- lm(data=df, price ~ carat + table +x +y +z +depth)
 summary(model)
 
+#14
 model <- lm(data=df, price ~ carat + table +x +y +depth)
 summary(model)
 confint(model)
