@@ -39,7 +39,7 @@ y
 ts <- zoo(x, order.by=y)
 ts
 
-lag(ts, 1) 
+stats::lag(ts, -1) 
 diff(ts)
 
 # поквартально, 4 наблюдения в год
@@ -94,6 +94,7 @@ autoplot(GAZP[,1:4], facet=NULL)
 chartSeries(GAZP)
 
 # Проанализируем какой-нибудь набор данных
+data("Investment")
 d <- as.zoo(Investment)
 autoplot(d[,1:2], facet=NULL)
 
@@ -123,4 +124,23 @@ ci <- mutate(ci, left_95=estimate-1.96*se_ac,
 # и для модели с учётом корреляции
 confint(model)  # старая модель - без автокорреляции
 ci # интервалы для модели с учётом корреляции
+
+# формальные тесты на автокорреляцию
+# Тест Дарбина-Уотсона / Durbin-Watson
+# H0: нет автокорреляции
+# H1: автокорреляция 1-го порядка
+dwt(model)
+res <- dwt(model)
+res$dw
+res$p # if p-value < 0.05 - There is an autocorrelation between eps & eps-1
+res$r # оценка корреляции остатков
+
+# BG-test Бройша-Годфри ( Breusch-Godfrey )
+# H0: нет автокорреляции
+# Ha: автокорреляция k-го порядка
+bgtest(model, order = 2)
+# H0 не отвергается (вероятно не хватило данных)
+res <- bgtest(model, order = 2)
+res$statistic
+res$p.value # if p-vaule < 0.05 there is an autocorrelation
 
