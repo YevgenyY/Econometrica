@@ -13,7 +13,7 @@ library("broom") # просто манипуляции
 library("ggplot2") # графики
 
 library("rlms")
-h <- rlms_read("data/r22i_os_31.sav")
+h <- rlms_read("data/r22i_os_32.sav")
 
 sal <- h$rj13.2
 age <- 2013 - h$rh6
@@ -68,8 +68,21 @@ qplot(data=h, age, geom="histogram", fill=sex) + facet_grid(~sex) +
   xlim(c(1,100)) 
 
 # 5
+# set all dummy variables
+h$hs_edu[h$edu==1] <- 1
+h$hs_edu[h$edu!=1] <- 0
 
+h$spec_edu[h$edu==2] <- 1
+h$spec_edu[h$edu!=2] <- 0
 
+h$high_edu[h$edu==3] <- 1
+h$high_edu[h$edu!=3] <- 0
 
+h$city[h$status==1] <- 1
+h$city[h$status!=1] <- 0
 
+h$satisfied[h$happiness==1] <- 1
+h$satisfied[h$happiness!=1] <- 0
 
+model5 <- lm(data=h, sal ~ age + sex + city + satisfied)
+summary(model5)
