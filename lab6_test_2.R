@@ -84,5 +84,8 @@ h$city[h$status!=1] <- 0
 h$satisfied[h$happiness==1] <- 1
 h$satisfied[h$happiness!=1] <- 0
 
-model5 <- lm(data=h, sal ~ age + sex + city + satisfied)
+model5 <- lm(data=h, sal ~ age + sex + hs_edu + 
+               spec_edu + high_edu + city + satisfied)
 summary(model5)
+
+coeftest(model5, vcov. = vcovHC(model5))
