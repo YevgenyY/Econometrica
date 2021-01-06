@@ -24,4 +24,12 @@ qplot(data=t, x=survived, y=age, geom="boxplot")
 qplot(data=t, x=age, y=..count.., fill=survived, geom="density", position="stack")
 qplot(data=t, x=age, y=..count.., fill=survived, geom="density", position="fill")
 
-# переходим к оценке моделей
+# Оцениывние моделей
+m_logit <- glm(data=t, survived ~ sex +age + pclass +fare,
+               family=binomial(link="logit"), x=TRUE)
+
+m_probit <- glm(data=t, survived ~ sex +age + pclass +fare,
+               family=binomial(link="probit"), x=TRUE)
+
+summary(m_logit)
+summary(m_probit)
