@@ -33,3 +33,31 @@ m_probit <- glm(data=t, survived ~ sex +age + pclass +fare,
 
 summary(m_logit)
 summary(m_probit)
+
+vcov(m_logit)
+
+# Прогнозирование
+newdata <- data.frame(age=seq(from=5,to=100), length=100, sex="male", pclass=as.factor(2), fare=100)
+
+pr_logit <- predict(m_logit, newdata, se=TRUE)
+newdata_pr <- cbind(newdata, pr_logit)
+head(newdata_pr)
+
+newdata_pr <- mutate(newdata_pr, prob=plogis(fit), 
+                     left_ci=plogis(fit-1.96*se.fit),
+                     right_ci=plogis(fit+1.96*se.fit))
+
+# Строим график вероятности от возраста с доверительными интервалами
+qplot(data=newdata_pr, x=age, y=prob,geom="line") + 
+  geom_ribbon(aes(ymin=left_ci, ymax=right_ci), alpha=0.2)
+
+
+# Вторая модель
+t2 <- select(t, sex, age, pclass, survived, fare) %>% na.omit
+head(t2)
+
+m_logit2 <- glm(data=t2, survived ~ sex +age, family=binomial(lin="logit"),x=TRUE)
+
+# Сравним две моделиб H0: они одинаковые
+# p-value ~0 - H0 - отвергаем
+lrtest(m_logit, m_logit2)
